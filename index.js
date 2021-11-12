@@ -20,6 +20,7 @@ async function run() {
         await client.connect();
         const database = client.db('sunglass_garden');
         const products = database.collection('products');
+        const users = database.collection('users');
 
 
         // get all services
@@ -27,6 +28,42 @@ async function run() {
             const cursor = await products.find({});
             const data = await cursor.toArray();
             res.send(data)
+        });
+
+        // add and/ or get specific user
+        app.post('/user', async (req, res) => {
+            const data = {
+                ...req.body,
+                role: 'user'
+            };
+            const query = { email: data.email };
+            const user = await users.findOne(query);
+            if (user) {
+                res.send(user);
+            } else {
+                const result = await users.insertOne(data);
+                if (result.insertedId) {
+                    const newUser = await users.findOne(query);
+                    res.send(newUser);
+                }
+            }
+        });
+        // update user role
+        app.post('/user/update-role', async (req, res) => {
+            const data = req.body;
+            const query = { email: data.email };
+            const user = await users.findOne(query);
+            if (user) {
+                const updateDoc = {
+                    $set: {
+                        role: "admin"
+                    },
+                };
+                const result = await users.updateOne(query, updateDoc)
+                res.send(result);
+            } else {
+                res.send({});
+            }
         });
 
 
