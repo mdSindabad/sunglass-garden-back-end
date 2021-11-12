@@ -23,11 +23,19 @@ async function run() {
         const users = database.collection('users');
 
 
-        // get all services
+        // get all products
         app.get('/products', async (req, res) => {
             const cursor = await products.find({});
             const data = await cursor.toArray();
             res.send(data)
+        });
+
+        // get single product
+        app.get('/product/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) }
+            const product = await products.findOne(query);
+            res.send(product)
         });
 
         // add and/ or get specific user
