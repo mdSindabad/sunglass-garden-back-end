@@ -21,6 +21,7 @@ async function run() {
         const database = client.db('sunglass_garden');
         const products = database.collection('products');
         const users = database.collection('users');
+        const orders = database.collection('orders');
 
 
         // get all products
@@ -36,6 +37,41 @@ async function run() {
             const query = { _id: ObjectId(id) }
             const product = await products.findOne(query);
             res.send(product)
+        });
+
+        // get specific user's orders
+        app.get('/orders/:email', async (req, res) => {
+            const email = req.params.email;
+            const cursor = await orders.find({});
+            const allOrders = await cursor.toArray();
+            const userOrders = await allOrders.filter(order => order.customer.email === email);
+            if (userOrders) {
+                res.send(userOrders);
+            } else {
+                res.send({})
+            }
+        });
+
+        // get all orders
+        app.get('/orders', async (req, res) => {
+            const cursor = await orders.find({});
+            const allOrders = await cursor.toArray();
+            if (allOrders) {
+                res.send(allOrders)
+            } else {
+                res.send({})
+            }
+        });
+
+        // add orders
+        app.post('/order', async (req, res) => {
+            const data = req.body;
+            const result = await orders.insertOne(data);
+            try {
+                res.send(result);
+            } catch {
+                res.send({ error: { message: "Something Went Wrong" } });
+            }
         });
 
         // add and/ or get specific user
