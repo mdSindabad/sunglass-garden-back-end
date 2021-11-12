@@ -65,7 +65,12 @@ async function run() {
 
         // add orders
         app.post('/order', async (req, res) => {
-            const data = req.body;
+            const data = {
+                ...req.body,
+                payment: {
+                    status: "unpaid"
+                }
+            };
             const result = await orders.insertOne(data);
             try {
                 res.send(result);
