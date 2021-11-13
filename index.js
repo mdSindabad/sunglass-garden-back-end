@@ -67,9 +67,11 @@ async function run() {
         app.post('/order', async (req, res) => {
             const data = {
                 ...req.body,
-                status: {
-                    payment: "unpaid",
-                    delivery: "pending"
+                payment: {
+                    status: "unpaid"
+                },
+                delivery: {
+                    status: "pending"
                 }
             };
             const result = await orders.insertOne(data);
@@ -78,6 +80,21 @@ async function run() {
             } catch {
                 res.send({ error: { message: "Something Went Wrong" } });
             }
+        });
+
+        // update order
+        app.put('/order/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) }
+            const updateDoc = {
+                $set: {
+                    payment: {
+                        status: 'paid'
+                    }
+                },
+            };
+            const result = await orders.updateOne(query, updateDoc);
+            res.send(result);
         });
 
         // add and/ or get specific user
