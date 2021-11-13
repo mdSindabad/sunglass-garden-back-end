@@ -67,8 +67,9 @@ async function run() {
         app.post('/order', async (req, res) => {
             const data = {
                 ...req.body,
-                payment: {
-                    status: "unpaid"
+                status: {
+                    payment: "unpaid",
+                    delivery: "pending"
                 }
             };
             const result = await orders.insertOne(data);
