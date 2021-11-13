@@ -85,7 +85,7 @@ async function run() {
         // update order
         app.put('/order/:id', async (req, res) => {
             const id = req.params.id;
-            const query = { _id: ObjectId(id) }
+            const query = { _id: ObjectId(id) };
             const updateDoc = {
                 $set: {
                     payment: {
@@ -94,6 +94,14 @@ async function run() {
                 },
             };
             const result = await orders.updateOne(query, updateDoc);
+            res.send(result);
+        });
+
+        // delete order
+        app.delete('/order/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) };
+            const result = await orders.deleteOne(query)
             res.send(result);
         });
 
