@@ -84,12 +84,27 @@ async function run() {
         });
 
         // update order
-        app.put('/order/:id', async (req, res) => {
+        app.put('/order/payment/:id', async (req, res) => {
             const id = req.params.id;
             const query = { _id: ObjectId(id) };
             const updateDoc = {
                 $set: {
                     payment: {
+                        status: 'paid'
+                    }
+                },
+            };
+            const result = await orders.updateOne(query, updateDoc);
+            res.send(result);
+        });
+
+        // update order
+        app.put('/order/delivery/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) };
+            const updateDoc = {
+                $set: {
+                    delivery: {
                         status: 'paid'
                     }
                 },
