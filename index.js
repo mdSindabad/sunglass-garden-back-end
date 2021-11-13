@@ -105,7 +105,7 @@ async function run() {
             const updateDoc = {
                 $set: {
                     delivery: {
-                        status: 'paid'
+                        status: 'shipped'
                     }
                 },
             };
