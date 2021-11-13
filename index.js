@@ -22,6 +22,7 @@ async function run() {
         const products = database.collection('products');
         const users = database.collection('users');
         const orders = database.collection('orders');
+        const reviews = database.collection('reviews');
 
 
         // get all products
@@ -104,6 +105,18 @@ async function run() {
             const result = await orders.deleteOne(query)
             res.send(result);
         });
+
+        // add review
+        app.post('/review', async (req, res) => {
+            const data = req.body;
+            const result = await reviews.insertOne(data);
+            try {
+                res.send(result);
+            } catch {
+                res.send({ error: { message: "Something Went Wrong" } });
+            }
+        });
+
 
         // add and/ or get specific user
         app.post('/user', async (req, res) => {
