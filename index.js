@@ -40,6 +40,29 @@ async function run() {
             res.send(product)
         });
 
+        // update product
+        app.put('/product/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) };
+            const updateDoc = {
+                $set: {
+                    payment: {
+                        status: 'paid'
+                    }
+                },
+            };
+            const result = await products.updateOne(query, updateDoc);
+            res.send(result);
+        });
+
+        // delete product
+        app.delete('/product/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) };
+            const result = await products.deleteOne(query)
+            res.send(result);
+        });
+
         // get specific user's orders
         app.get('/orders/:email', async (req, res) => {
             const email = req.params.email;
