@@ -65,12 +65,31 @@ async function run() {
         });
 
         // update product
-        app.put('/product/:id', async (req, res) => {
-            const id = req.params.id;
+        app.put('/product/update/:id', async (req, res) => {
+            const id = req.params;
             const query = { _id: ObjectId(id) };
-            const updateDoc = req.body;
-            const result = await products.updateOne(query, updateDoc);
-            res.send(result);
+            const { name, image, price, optics, height, width, material } = req.body;
+            const updateDoc = {
+                $set: {
+                    name,
+                    image,
+                    price,
+                    details: {
+                        optics,
+                        height,
+                        width,
+                        material
+                    }
+                }
+            };
+            try {
+                const result = await products.updateOne(query, updateDoc);
+                if (result) {
+                    res.send(result);
+                }
+            } catch {
+                res.send({ error: { message: "Something Went Wrong" } });
+            }
         });
 
         // delete product
