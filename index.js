@@ -192,6 +192,12 @@ async function run() {
             }
         });
 
+        // get all products
+        app.get('/users', async (req, res) => {
+            const cursor = await users.find({});
+            const data = await cursor.toArray();
+            res.send(data)
+        });
 
         // add and/ or get specific user
         app.post('/user', async (req, res) => {
@@ -211,10 +217,11 @@ async function run() {
                 }
             }
         });
+
         // update user role
-        app.post('/user/update-role', async (req, res) => {
-            const data = req.body;
-            const query = { email: data.email };
+        app.put('/user/update-role', async (req, res) => {
+            const id = req.body.id;
+            const query = { _id: ObjectId(id) };
             const user = await users.findOne(query);
             if (user) {
                 const updateDoc = {
