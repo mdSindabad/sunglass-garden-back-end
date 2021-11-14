@@ -40,6 +40,30 @@ async function run() {
             res.send(product)
         });
 
+        // add orders
+        app.post('/product', async (req, res) => {
+            const { name, image, price, optics, height, width, material } = req.body;
+            const data = {
+                name,
+                image,
+                price,
+                data: {
+                    optics,
+                    height,
+                    width,
+                    material
+                }
+            };
+            try {
+                const result = await products.insertOne(data);
+                if (result) {
+                    res.send(result);
+                }
+            } catch {
+                res.send({ error: { message: "Something Went Wrong" } });
+            }
+        });
+
         // update product
         app.put('/product/:id', async (req, res) => {
             const id = req.params.id;
