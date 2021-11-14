@@ -47,7 +47,7 @@ async function run() {
                 name,
                 image,
                 price,
-                data: {
+                details: {
                     optics,
                     height,
                     width,
@@ -68,13 +68,7 @@ async function run() {
         app.put('/product/:id', async (req, res) => {
             const id = req.params.id;
             const query = { _id: ObjectId(id) };
-            const updateDoc = {
-                $set: {
-                    payment: {
-                        status: 'paid'
-                    }
-                },
-            };
+            const updateDoc = req.body;
             const result = await products.updateOne(query, updateDoc);
             res.send(result);
         });
