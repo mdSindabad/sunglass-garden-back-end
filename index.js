@@ -29,7 +29,11 @@ async function run() {
         app.get('/products', async (req, res) => {
             const cursor = await products.find({});
             const data = await cursor.toArray();
-            res.send(data)
+            try {
+                res.send(data);
+            } catch {
+                res.send({ error: { message: "Something Went Wrong" } });
+            }
         });
 
         // get single product
@@ -37,7 +41,11 @@ async function run() {
             const id = req.params.id;
             const query = { _id: ObjectId(id) }
             const product = await products.findOne(query);
-            res.send(product)
+            try {
+                res.send(product);
+            } catch {
+                res.send({ error: { message: "Something Went Wrong" } });
+            }
         });
 
         // add orders
@@ -96,8 +104,12 @@ async function run() {
         app.delete('/product/:id', async (req, res) => {
             const id = req.params.id;
             const query = { _id: ObjectId(id) };
-            const result = await products.deleteOne(query)
-            res.send(result);
+            const result = await products.deleteOne(query);
+            try {
+                res.send(result);
+            } catch {
+                res.send({ error: { message: "Something Went Wrong" } });
+            }
         });
 
         // get specific user's orders
@@ -170,7 +182,11 @@ async function run() {
                 },
             };
             const result = await orders.updateOne(query, updateDoc);
-            res.send(result);
+            try {
+                res.send(result);
+            } catch {
+                res.send({ error: { message: "Something Went Wrong" } });
+            }
         });
 
         // delete order
@@ -178,7 +194,22 @@ async function run() {
             const id = req.params.id;
             const query = { _id: ObjectId(id) };
             const result = await orders.deleteOne(query)
-            res.send(result);
+            try {
+                res.send(result);
+            } catch {
+                res.send({ error: { message: "Something Went Wrong" } });
+            }
+        });
+
+        // get all reviews
+        app.get('/reviews', async (req, res) => {
+            const cursor = await reviews.find({});
+            const data = await cursor.toArray();
+            try {
+                res.send(data);
+            } catch {
+                res.send({ error: { message: "Something Went Wrong" } });
+            }
         });
 
         // add review
@@ -192,11 +223,15 @@ async function run() {
             }
         });
 
-        // get all products
+        // get all users
         app.get('/users', async (req, res) => {
             const cursor = await users.find({});
             const data = await cursor.toArray();
-            res.send(data)
+            try {
+                res.send(data);
+            } catch {
+                res.send({ error: { message: "Something Went Wrong" } });
+            }
         });
 
         // add and/ or get specific user
