@@ -242,14 +242,14 @@ async function run() {
             };
             const query = { email: data.email };
             const user = await users.findOne(query);
-            if (user) {
-                res.send(user);
-            } else {
+            if (!user) {
                 const result = await users.insertOne(data);
                 if (result.insertedId) {
                     const newUser = await users.findOne(query);
                     res.send(newUser);
                 }
+            } else {
+                res.send(user);
             }
         });
 
